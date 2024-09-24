@@ -21,13 +21,13 @@ class ViewShareProvider extends ServiceProvider
     public function boot()
     {
 
-        if (! app()->runningInConsole()) {
+       
             Paginator::useBootstrap();
             config()->set('settings', Setting::pluck('value','item')->all());
 
             $Pages = Page::with('getCategory')->where('category', 1)->get();
             $Service = Service::with('getCategory')->where('category', 1)->get();
-            $ProductCategory = ProductCategory::with('cat')->get();
+            $ProductCategory = ProductCategory::with('cat')->where('parent_id', null)->get();
             $Product = Product::with(['getCategory'])->where('status', '=', 1)->get();
 
             View::share([
@@ -36,6 +36,6 @@ class ViewShareProvider extends ServiceProvider
                 'ProductCategory' => $ProductCategory,
                 'Product' => $Product,
             ]);
-       }
+       
     }
 }
