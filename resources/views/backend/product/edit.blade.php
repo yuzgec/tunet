@@ -87,13 +87,15 @@
                     </h4>
                 </div>
                 <div class="form-group mb-3 row">
-                    <div class="col">
-                        <select class="form-control" name="category">
+                    <label class="form-label col-3 col-form-label">Kategori </label>
+                    <div class="col-12">
+                        <select class="form-control multi" data-placeholder="Kategori Seçiniz" multiple name="category[]">
                             @foreach($Kategori as $item)
                                 <option value="{{ $item->id }}"
-
-                                    {{ ($Edit->category == $item->id) ? 'selected' : null }}
-                                >{{ $item->title }}</option>
+                                @foreach($Pivot as $ss)
+                                    {{ ($ss->category_id == $item->id) ? 'selected' : null }}
+                                @endforeach
+                                >{{ ($item->parent_id == 0 ) ? $item->title : '-- '.$item->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -326,13 +328,35 @@
 
 @endsection
 
-
+@section('customCSS')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="/backend/css/select2theme.css" rel="stylesheet" />
+@endsection
+    
 @section('customJS')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $("img").addClass("img-fluid");
-        })
+        });
+
+        $(document).ready(function() {
+            $('.single').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+
+        $(document).ready(function() {
+            $('.multi').select2({
+                theme: 'bootstrap-5',
+                closeOnSelect: true
+            });
+        });
+
     </script>
+
+    
     @include('backend.layout.ck')
 
 @endsection

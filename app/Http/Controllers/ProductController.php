@@ -56,15 +56,17 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $Edit = Product::where('id',$id)->first();
+        $Edit = Product::find($id);
+        $Pivot = ProductCategoryPivot::where(['product_id'=> $id])->get();
+
         $Kategori = ProductCategory::all();
 
-        return view('backend.product.edit', compact('Edit', 'Kategori'));
+        return view('backend.product.edit', compact('Edit', 'Kategori','Pivot'));
     }
 
     public function update(Request $request, Product $Update)
     {
-        $Update->update($request->except('_token', '_method', 'image', 'gallery'));
+        $Update->update($request->except('_token', '_method', 'image', 'gallery','category'));
 
         if ($request->removeImage == "1") {
             $Update->media()->where('collection_name', 'page')->delete();
